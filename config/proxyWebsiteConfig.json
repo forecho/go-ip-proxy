@@ -1,0 +1,54 @@
+{
+   "config": [
+      {
+         "name": "xicidaili",
+         "urlFormat": "http://www.xicidaili.com/nn/%s",
+         "urlParameters": "1,2,3",
+         "collectType": 0,
+         "charset": "utf-8",
+         "valueNameRuleMap": [
+            {
+               "name": "table",
+               "rule": "#ip_list tr:not(:first-child)"
+            },
+            {
+               "name": "ip",
+               "rule": "td:nth-child(2)"
+            },
+            {
+               "name": "port",
+               "rule": "td:nth-child(3)"
+            },
+            {
+               "name": "type",
+               "rule": "td:nth-child(6)"
+            }
+         ]
+      },
+      {
+         "name": "qydaili",
+         "urlFormat": "http://www.qydaili.com/free/?action=china&page=%s",
+         "urlParameters": "1,2,3,4,5,6,7,8,9,10",
+         "collectType": 0,
+         "charset": "utf-8",
+         "valueNameRuleMap": [
+            {
+               "name": "table",
+               "rule": "table.table-striped tbody tr:not(:first-child)"
+            },
+            {
+               "name": "ip",
+               "rule": "td:nth-child(1)"
+            },
+            {
+               "name": "port",
+               "rule": "td:nth-child(2)"
+            },
+            {
+               "name": "type",
+               "rule": "td:nth-child(4)"
+            }
+         ]
+      }
+   ]
+}
