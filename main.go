@@ -1,8 +1,10 @@
 package main
 
 import (
+	"fmt"
 	"go-ip-proxy/logger"
 	"go-ip-proxy/parser"
+	"go-ip-proxy/storage"
 	"go.uber.org/zap"
 	"sync"
 	"time"
@@ -13,21 +15,40 @@ func main() {
 	log.Info("test log", zap.Int("line", 47))
 
 	configs := parser.NewConfig("./config/proxyWebsiteConfig.json")
-	run(configs)
+
+	// Load database.
+	database, err := storage.NewStorage()
+	defer database.Close()
+	if err != nil {
+		logger.Error("db error", zap.Error(err))
+		panic(err)
+	}
+
+	run(database, configs)
 
 }
 
-func run(configs *parser.Configs) {
+func run(storage storage.Storage, configs *parser.Configs) {
+
 	for {
 		var wg sync.WaitGroup
 
 		for _, configuration := range configs.Configs {
-			parser.NewSelector(configuration)
+			items := parser.NewSelector(configuration)
+			for _, item := range items {
+				err := storage.Create(item, "1")
+				if err != nil {
+					logger.Error("db error", zap.Error(err))
+				}
+			}
+		}
+		for _, item := range storage.GetAll() {
+			fmt.Printf("%s\n", string(item))
 		}
 
 		wg.Wait()
 		logger.Debug("finish once, sleep 10 minutes.")
-		time.Sleep(time.Minute * 10)
+		time.Sleep(time.Second * 5)
 	}
 }
 

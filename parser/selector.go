@@ -20,18 +20,19 @@ type Selector struct {
 var nameValue = make(map[string]string)
 var proxy = make([]string, 0)
 
-func NewSelector(config *Config) (err error) {
+func NewSelector(config *Config) []string {
 
 	parameters := strings.Split(config.UrlParameters, ",")
 	urls := util.MakeUrls(config.UrlFormat, parameters)
+	var itemMap = make([]string, 0)
 
 	for _, url := range urls {
-		itemMap := getPageBody(config, url)
+		itemMap = getPageBody(config, url)
 		for _, value := range itemMap {
 			logger.Infof("ip is %s", value)
 		}
 	}
-	return
+	return itemMap
 }
 
 func getPageBody(config *Config, url string) []string {
