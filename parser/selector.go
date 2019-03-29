@@ -29,7 +29,7 @@ func NewSelector(config *Config) []string {
 	for _, url := range urls {
 		itemMap = getPageBody(config, url)
 		for _, value := range itemMap {
-			logger.Infof("ip is %s", value)
+			logger.Debugf("ip is %s", value)
 		}
 	}
 	return itemMap
@@ -55,14 +55,10 @@ func getPageBody(config *Config, url string) []string {
 	c := colly.NewCollector()
 
 	c.OnHTML(selectorMap["table"][0], func(element *colly.HTMLElement) {
-		//fmt.Printf("%s\n", element.DOM.Find(selectorMap["ip"][0]).Text())
 
 		for key, value := range selectorMap {
 			if key != "table" {
-				//fmt.Printf(element.DOM.Find(value[0]).Text() + "\n")
 				nameValue[key] = element.DOM.Find(value[0]).Text()
-				logger.Info(nameValue[key])
-				//fmt.Printf("%s\n", element.DOM.Find(value[0]).Text())
 			}
 		}
 		proxy = append(

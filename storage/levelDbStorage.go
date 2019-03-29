@@ -63,11 +63,22 @@ func (s *LevelDbStorage) Create(key string, value string) error {
 	return err
 }
 
+// Delete the value by the given key.
+func (s *LevelDbStorage) Delete(key string) bool {
+	isSucceed := false
+	err := s.Db.Delete([]byte(key), nil)
+
+	if err == nil {
+		isSucceed = true
+	}
+
+	return isSucceed
+}
+
 // Close will close the DB.
-func (s *LevelDbStorage) Close() error {
+func (s *LevelDbStorage) Close() {
 	err := s.Db.Close()
 	if err != nil {
 		logger.Error("db close error", zap.Error(err))
 	}
-	return err
 }

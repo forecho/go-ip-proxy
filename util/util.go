@@ -5,7 +5,6 @@ import (
 	"github.com/parnurzeal/gorequest"
 	"math/rand"
 	"regexp"
-	"strconv"
 	"strings"
 	"time"
 )
@@ -32,20 +31,15 @@ func RandomUA() string {
 }
 
 // VerifyProxyIp will use given ip and port as proxy, if the proxy is available, return true, otherwise return false.
-func VerifyProxyIp(ip string, port int) bool {
+func VerifyProxyIp(ip string) bool {
 	if ip == "" || !IsIp(ip) {
 		return false
 	}
 
-	if port <= 0 {
-		return false
-	}
-
-	proxy := "http://" + ip + ":" + strconv.Itoa(port)
 	resp, _, errs := gorequest.New().
-		Proxy(proxy).
+		Proxy(ip).
 		Get("http://httpbin.org/get").
-		Timeout(time.Second * 6).
+		Timeout(time.Second * 5).
 		End()
 
 	if errs != nil && len(errs) > 0 {
@@ -61,8 +55,8 @@ func VerifyProxyIp(ip string, port int) bool {
 
 // IsIp will match the given parameter is ip address or not.
 func IsIp(ip string) bool {
-	return IsInputMatchRegex(ip,
-		"^((?:(?:25[0-5]|2[0-4]\\d|((1\\d{2})|([1-9]?\\d)))\\.){3}(?:25[0-5]|2[0-4]\\d|((1\\d{2})|([1-9]?\\d))))")
+	// "https://61.189.242.243:3434324"
+	return IsInputMatchRegex(ip, "^((https|http):\\/\\/)((25[0-5]|2[0-4]\\d|[01]?\\d\\d?)\\.){3}(25[0-5]|2[0-4]\\d|[01]?\\d\\d?):[0-9]\\d*$")
 }
 
 // IsInputMatchRegex will verify the input string is match the regex or not.

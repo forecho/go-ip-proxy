@@ -5,6 +5,7 @@ import (
 	"go-ip-proxy/logger"
 	"go-ip-proxy/parser"
 	"go-ip-proxy/storage"
+	"go-ip-proxy/verifier"
 	"go.uber.org/zap"
 	"sync"
 	"time"
@@ -24,6 +25,15 @@ func main() {
 		panic(err)
 	}
 
+	// Verify storage every 5min.
+	verifyTicker := time.NewTicker(time.Minute * 5)
+	go func() {
+		for range verifyTicker.C {
+			verifier.VerifyAndDelete(database)
+			logger.Debug("verify database.")
+		}
+	}()
+
 	run(database, configs)
 
 }
@@ -35,47 +45,14 @@ func run(storage storage.Storage, configs *parser.Configs) {
 
 		for _, configuration := range configs.Configs {
 			items := parser.NewSelector(configuration)
-			for _, item := range items {
-				err := storage.Create(item, "1")
-				if err != nil {
-					logger.Error("db error", zap.Error(err))
-				}
-			}
+			verifier.VerifyAndSave(items, storage)
 		}
 		for _, item := range storage.GetAll() {
 			fmt.Printf("%s\n", string(item))
 		}
 
 		wg.Wait()
-		logger.Debug("finish once, sleep 10 minutes.")
-		time.Sleep(time.Second * 5)
+		logger.Debug("finish once, sleep 10 Second.")
+		time.Sleep(time.Second * 10)
 	}
 }
-
-// func main() {
-//     // 实例化
-//     c := colly.NewCollector(
-//         // 限定域名
-//         colly.AllowedDomains("blog.phpha.com"),
-//         // 最大深度
-//         colly.MaxDepth(1),
-//     )
-
-//     // On every a element which has href attribute call callback
-//     c.OnHTML("a[href]", func(e *colly.HTMLElement) {
-//         link := e.Attr("href")
-//         // Print link
-//         fmt.Printf("Link found: %q -> %s\n", e.Text, link)
-//         // Visit link found on page
-//         // Only those links are visited which are in AllowedDomains
-//         c.Visit(e.Request.AbsoluteURL(link))
-//     })
-
-//     // Before making a request print "Visiting ..."
-//     c.OnRequest(func(r *colly.Request) {
-//         fmt.Println("Visiting", r.URL.String())
-//     })
-
-//     // Start scraping on http://blog.phpha.com/
-//     c.Visit("http://blog.phpha.com/")
-// }
