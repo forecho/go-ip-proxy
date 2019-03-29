@@ -29,23 +29,30 @@ func NewLevelDbStorage(fileName string) (*LevelDbStorage, error) {
 }
 
 // Get will get the json byte value of key.
-func (s *LevelDbStorage) Get(key string) []byte {
-	var value []byte
+func (s *LevelDbStorage) Get() string {
+	var value string
 
-	value, err := s.Db.Get([]byte(key), nil)
+	iter := s.Db.NewIterator(nil, nil)
+
+	if iter.First() {
+		return string(iter.Key())
+	}
+	iter.Release()
+	err := iter.Error()
 	if err != nil {
-		logger.Error("db get data error", zap.Error(err))
+		logger.Error("db get one data error", zap.Error(err))
 	}
 	return value
 }
 
 // GetAll will return all key-value in DB.
-func (s *LevelDbStorage) GetAll() []string {
-	var result []string
+func (s *LevelDbStorage) GetAll() []byte {
+	var result []byte
 
 	iter := s.Db.NewIterator(nil, nil)
 	for iter.Next() {
-		result = append(result, string(iter.Key()))
+		key := iter.Key()
+		result = append(result, key...)
 	}
 	iter.Release()
 	err := iter.Error()

@@ -1,11 +1,11 @@
 package storage
 
 type Storage interface {
-	Get(string) []byte
+	Get() string
 	Delete(string) bool
 	Create(string, string) error
 	Close()
-	GetAll() []string
+	GetAll() []byte
 	//GetRandomOne() []byte
 }
 

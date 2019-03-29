@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"go-ip-proxy/logger"
 	"go-ip-proxy/parser"
+	"go-ip-proxy/server"
 	"go-ip-proxy/storage"
 	"go-ip-proxy/verifier"
 	"go.uber.org/zap"
@@ -24,6 +25,9 @@ func main() {
 		logger.Error("db error", zap.Error(err))
 		panic(err)
 	}
+
+	// Start server
+	go server.NewServer(database)
 
 	// Verify storage every 5min.
 	verifyTicker := time.NewTicker(time.Minute * 5)
