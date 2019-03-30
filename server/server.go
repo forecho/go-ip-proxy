@@ -27,9 +27,8 @@ func NewServer(storage storage.Storage) {
 // getIp will get a random Ip.
 // Sample usage: http://localhost:18090/get
 func getIp(w http.ResponseWriter, r *http.Request) {
-	fmt.Printf(r.Method)
 	if r.Method == "GET" {
-		w.Header().Add("content-type", "application/json")
+		w.Header().Set("content-type", "application/json")
 		if s == nil {
 			w.WriteHeader(http.StatusInternalServerError)
 		}
@@ -45,12 +44,11 @@ func getIp(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-
 // getAll will get all Ip.
 // Sample usage: http://localhost:18090/get-all
 func getAll(w http.ResponseWriter, r *http.Request) {
 	if r.Method == "GET" {
-		w.Header().Add("content-type", "application/json")
+		w.Header().Set("content-type", "application/json")
 		if s == nil {
 			w.WriteHeader(http.StatusInternalServerError)
 		}
