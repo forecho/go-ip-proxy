@@ -2,8 +2,8 @@
 port = 18090
 
 [log]
-# info、debug
-level = "error"
+# debug 、info、error
+level = "info"
 path = "./logs/all.log"
 
 [verify]

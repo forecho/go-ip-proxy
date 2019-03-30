@@ -65,15 +65,15 @@ func getAll(w http.ResponseWriter, r *http.Request) {
 }
 
 // deleteIp will delete the given ip. Return 200 if succeed.
-// Sample usage: http://localhost:18090/delete?ip=0.0.0.0
+// Sample usage: http://localhost:18090/delete?proxy=http://101.37.20.241:443
 func deleteIp(w http.ResponseWriter, r *http.Request) {
 	if r.Method == "GET" {
 		values := r.URL.Query()
-		if len(values["ip"]) > 1 {
+		if len(values["proxy"]) > 1 {
 			w.WriteHeader(http.StatusInternalServerError)
 		}
 
-		if s.Delete(values["ip"][0]) {
+		if s.Delete(values["proxy"][0]) {
 			w.WriteHeader(http.StatusOK)
 		}
 	} else {

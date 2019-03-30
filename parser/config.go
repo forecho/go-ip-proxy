@@ -19,9 +19,9 @@ type Config struct {
 	Type          Type   `json:"collectType"`
 	Charset       string `json:"charset"`
 	ValueRuleMap  []struct {
-		Name string `json:"name"`
-		Rule string `json:"rule"`
-		Attr string `json:"attribute,omitempty"`
+		Name  string `json:"name"`
+		Rule  string `json:"rule"`
+		Value string `json:"value,omitempty"`
 	} `json:"valueNameRuleMap"`
 }
 
@@ -36,9 +36,8 @@ func NewConfig(fileName string) *Configs {
 	byteValue, _ := ioutil.ReadAll(configFile)
 	jsonErr := json.Unmarshal(byteValue, &configs)
 	if jsonErr != nil {
-		logger.Error(fileName + " file json decode error", zap.Error(jsonErr))
+		logger.Error(fileName+" file json decode error", zap.Error(jsonErr))
 	}
-
 
 	return &configs
 }

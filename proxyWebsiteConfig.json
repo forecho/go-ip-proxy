@@ -1,54 +1,150 @@
 {
-   "config": [
-      {
-         "name": "xicidaili",
-         "urlFormat": "http://www.xicidaili.com/nn/%s",
-         "urlParameters": "1,2,3",
-         "collectType": 0,
-         "charset": "utf-8",
-         "valueNameRuleMap": [
-            {
-               "name": "table",
-               "rule": "#ip_list tr:not(:first-child)"
-            },
-            {
-               "name": "ip",
-               "rule": "td:nth-child(2)"
-            },
-            {
-               "name": "port",
-               "rule": "td:nth-child(3)"
-            },
-            {
-               "name": "type",
-               "rule": "td:nth-child(6)"
-            }
-         ]
-      },
-      {
-         "name": "qydaili",
-         "urlFormat": "http://www.qydaili.com/free/?action=china&page=%s",
-         "urlParameters": "1,2,3,4,5,6,7,8,9,10",
-         "collectType": 0,
-         "charset": "utf-8",
-         "valueNameRuleMap": [
-            {
-               "name": "table",
-               "rule": "table.table-striped tbody tr:not(:first-child)"
-            },
-            {
-               "name": "ip",
-               "rule": "td:nth-child(1)"
-            },
-            {
-               "name": "port",
-               "rule": "td:nth-child(2)"
-            },
-            {
-               "name": "type",
-               "rule": "td:nth-child(4)"
-            }
-         ]
-      }
-   ]
+  "config": [
+    {
+      "name": "89ip",
+      "urlFormat": "http://www.89ip.cn/index_%s",
+      "urlParameters": "1.html,2.html,3.html,4.html,5.html,6.html,7.html,8.html,9.html,10.html",
+      "collectType": 0,
+      "charset": "utf-8",
+      "valueNameRuleMap": [
+        {
+          "name": "table",
+          "rule": "table.layui-table tbody tr:not(:first-child)"
+        },
+        {
+          "name": "ip",
+          "rule": "td:nth-child(1)"
+        },
+        {
+          "name": "port",
+          "rule": "td:nth-child(2)"
+        },
+        {
+          "name": "type",
+          "rule": "td:nth-child(4)",
+          "value": "http"
+        }
+      ]
+    },
+    {
+      "name": "qydaili",
+      "urlFormat": "http://www.qydaili.com/free/?action=china&page=%s",
+      "urlParameters": "1,2,3,4,5,6,7,8,9,10",
+      "collectType": 0,
+      "charset": "utf-8",
+      "valueNameRuleMap": [
+        {
+          "name": "table",
+          "rule": "table.table-striped tbody tr:not(:first-child)"
+        },
+        {
+          "name": "ip",
+          "rule": "td:nth-child(1)"
+        },
+        {
+          "name": "port",
+          "rule": "td:nth-child(2)"
+        },
+        {
+          "name": "type",
+          "rule": "td:nth-child(4)"
+        }
+      ]
+    },
+    {
+      "name": "data5u",
+      "urlFormat": "http://www.data5u.com/free/%s",
+      "urlParameters": "index.shtml,gngn/index.shtml,gnpt/index.shtml",
+      "collectType": 0,
+      "charset": "utf-8",
+      "valueNameRuleMap": [
+        {
+          "name": "table",
+          "rule": ".l2"
+        },
+        {
+          "name": "ip",
+          "rule": "span:nth-child(1) li"
+        },
+        {
+          "name": "port",
+          "rule": "span:nth-child(2) li"
+        },
+        {
+          "name": "type",
+          "rule": "span:nth-child(4) li"
+        }
+      ]
+    },
+    {
+      "name": "ip3366",
+      "urlFormat": "http://www.ip3366.net/?stype=1&page=%s",
+      "urlParameters": "1,2,3,4,5,6,7,8,9,10",
+      "collectType": 0,
+      "charset": "gbk",
+      "valueNameRuleMap": [
+        {
+          "name": "table",
+          "rule": "#list tr:not(:first-child)"
+        },
+        {
+          "name": "ip",
+          "rule": "td:nth-child(1)"
+        },
+        {
+          "name": "port",
+          "rule": "td:nth-child(2)"
+        },
+        {
+          "name": "type",
+          "rule": "td:nth-child(4)"
+        }
+      ]
+    },
+    {
+      "name": "goubanjia",
+      "urlFormat": "http://www.goubanjia.com/",
+      "collectType": 0,
+      "charset": "utf-8",
+      "valueNameRuleMap": [
+        {
+          "name": "table",
+          "rule": ".table-hover tr:not(:first-child)"
+        },
+        {
+          "name": "ip",
+          "rule": "td:nth-child(1)"
+        },
+        {
+          "name": "type",
+          "rule": "td:nth-child(3)"
+        }
+      ]
+    },
+    {
+      "name": "jiangxianli",
+      "urlFormat": "http://ip.jiangxianli.com/?page=%s",
+      "urlParameters": "1,2,3,4,5,6,7,8",
+      "collectType": 0,
+      "charset": "utf-8",
+      "valueNameRuleMap": [
+        {
+          "name": "table",
+          "rule": ".table-hover tr:not(:first-child)"
+        },
+        {
+          "name": "ip",
+          "rule": "td:nth-child(2)"
+        },
+        {
+          "name": "port",
+          "rule": "td:nth-child(3)"
+        },
+        {
+          "name": "type",
+          "rule": "td:nth-child(5)"
+        }
+      ]
+    }
+  ]
 }

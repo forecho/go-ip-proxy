@@ -13,9 +13,7 @@ import (
 )
 
 func main() {
-	log := logger.Config(config.Config().Log.Path, config.Config().Log.Level, true)
-	log.Info("test log", zap.Int("line", 47))
-
+	logger.Config(config.Config().Log.Path, config.Config().Log.Level, true)
 	configs := parser.NewConfig("./proxyWebsiteConfig.json")
 
 	// Load database.

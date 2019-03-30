@@ -27,9 +27,9 @@ func NewSelector(config *Config) []string {
 	var itemMap = make([]string, 0)
 
 	for _, url := range urls {
-		itemMap = getPageBody(config, url)
-		for _, value := range itemMap {
-			logger.Debugf("ip is %s", value)
+		//itemMap = getPageBody(config, url)
+		for _, value := range getPageBody(config, url) {
+			itemMap = append(itemMap, value)
 		}
 	}
 	return itemMap
@@ -37,6 +37,7 @@ func NewSelector(config *Config) []string {
 
 func getPageBody(config *Config, url string) []string {
 	selectorMap := make(map[string][]string)
+	var ip string
 	for _, value := range config.ValueRuleMap {
 		if value.Name == "" || value.Rule == "" {
 			logger.Errorf("config name:%s contains valueRuleMap item with empty name or rule, this item will be ignored.", config.Name)
@@ -45,25 +46,35 @@ func getPageBody(config *Config, url string) []string {
 
 		if value.Name == "table" {
 			selectorMap[value.Name] = []string{value.Rule}
-		} else if value.Attr != "" {
-			selectorMap[value.Name] = []string{value.Rule, value.Attr}
+		} else if value.Value != "" {
+			selectorMap[value.Name] = []string{value.Rule, value.Value}
 		} else {
 			selectorMap[value.Name] = []string{value.Rule}
 		}
 	}
 
 	c := colly.NewCollector()
-
 	c.OnHTML(selectorMap["table"][0], func(element *colly.HTMLElement) {
-
+		nameValue["port"] = ""
 		for key, value := range selectorMap {
 			if key != "table" {
-				nameValue[key] = element.DOM.Find(value[0]).Text()
+				if len(value) == 1 {
+					nameValue[key] = element.DOM.Find(value[0]).Text()
+				} else if len(value) == 2 {
+					// TODO 暂时这样写
+					nameValue[key] = value[1]
+				}
 			}
 		}
-		proxy = append(
-			proxy,
-			fmt.Sprintf("%s://%s:%s", strings.ToLower(nameValue["type"]), nameValue["ip"], nameValue["port"]))
+		if nameValue["port"] != "" {
+			nameValue["port"] = fmt.Sprintf(":%s", strings.TrimSpace(nameValue["port"]))
+		}
+		ip = fmt.Sprintf("%s://%s%s",
+			strings.TrimSpace(strings.ToLower(nameValue["type"])),
+			strings.TrimSpace(nameValue["ip"]),
+			nameValue["port"])
+		proxy = append(proxy, ip)
+		logger.Debugf("get ip %s ", ip)
 	})
 
 	c.UserAgent = util.RandomUA()
@@ -72,18 +83,15 @@ func getPageBody(config *Config, url string) []string {
 		r.Headers.Set("Accept", "*/*")
 		r.Headers.Set("Accept-Encoding", "gzip, deflate")
 	})
-	//c.OnResponse(func(resp *colly.Response) {
-	//	body = string(resp.Body)
-	//})
 
 	c.OnError(func(resp *colly.Response, errHttp error) {
-		logger.Error("response error", zap.Error(errHttp))
+		logger.Error("response error "+url, zap.Error(errHttp))
 	})
 
 	err := c.Visit(url)
 
 	if err != nil {
-		logger.Error("visit error", zap.Error(err))
+		logger.Error("visit error "+url, zap.Error(err))
 	}
 	logger.Info("visit " + url)
 
