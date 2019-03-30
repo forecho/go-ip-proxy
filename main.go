@@ -1,7 +1,7 @@
 package main
 
 import (
-	"fmt"
+	"go-ip-proxy/config"
 	"go-ip-proxy/logger"
 	"go-ip-proxy/parser"
 	"go-ip-proxy/server"
@@ -13,10 +13,10 @@ import (
 )
 
 func main() {
-	log := logger.Config("./logs/all.log", "info", true)
+	log := logger.Config(config.Config().Log.Path, config.Config().Log.Level, true)
 	log.Info("test log", zap.Int("line", 47))
 
-	configs := parser.NewConfig("./config/proxyWebsiteConfig.json")
+	configs := parser.NewConfig("./proxyWebsiteConfig.json")
 
 	// Load database.
 	database, err := storage.NewStorage()
@@ -50,9 +50,6 @@ func run(storage storage.Storage, configs *parser.Configs) {
 		for _, configuration := range configs.Configs {
 			items := parser.NewSelector(configuration)
 			verifier.VerifyAndSave(items, storage)
-		}
-		for _, item := range storage.GetAll() {
-			fmt.Printf("%s\n", string(item))
 		}
 
 		wg.Wait()

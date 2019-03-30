@@ -1,0 +1,10 @@
+[http]
+port = 18090
+
+[log]
+# info、debug
+level = "error"
+path = "./logs/all.log"
+
+[verify]
+url = "http://httpbin.org/get"

@@ -2,6 +2,7 @@ package server
 
 import (
 	"fmt"
+	"go-ip-proxy/config"
 	"go-ip-proxy/storage"
 	"net/http"
 )
@@ -14,16 +15,10 @@ func NewServer(storage storage.Storage) {
 		s = storage
 	}
 
-	//defer func() {
-	//	if r := recover(); r != nil {
-	//		logger.Error("", zap.Error(r))
-	//	}
-	//}()
-
 	http.HandleFunc("/get", getIp)
 	http.HandleFunc("/get-all", getAll)
 	http.HandleFunc("/delete", deleteIp)
-	err := http.ListenAndServe(":18090", nil)
+	err := http.ListenAndServe(fmt.Sprintf(":%d", config.Config().Http.Port), nil)
 	if err != nil {
 		panic(err)
 	}
@@ -54,7 +49,6 @@ func getIp(w http.ResponseWriter, r *http.Request) {
 // getAll will get all Ip.
 // Sample usage: http://localhost:18090/get-all
 func getAll(w http.ResponseWriter, r *http.Request) {
-	fmt.Printf(r.Method)
 	if r.Method == "GET" {
 		w.Header().Add("content-type", "application/json")
 		if s == nil {

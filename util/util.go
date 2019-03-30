@@ -3,6 +3,7 @@ package util
 import (
 	"fmt"
 	"github.com/parnurzeal/gorequest"
+	"go-ip-proxy/config"
 	"math/rand"
 	"regexp"
 	"strings"
@@ -38,7 +39,7 @@ func VerifyProxyIp(ip string) bool {
 
 	resp, _, errs := gorequest.New().
 		Proxy(ip).
-		Get("http://httpbin.org/get").
+		Get(config.Config().Verify.Url).
 		Timeout(time.Second * 5).
 		End()
 
