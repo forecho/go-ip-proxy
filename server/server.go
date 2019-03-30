@@ -1,11 +1,19 @@
 package server
 
 import (
+	"encoding/json"
 	"fmt"
 	"go-ip-proxy/config"
 	"go-ip-proxy/storage"
 	"net/http"
+	"strings"
 )
+
+type Response struct {
+	Code    int                    `json:"code"`
+	Message string                 `json:"message"`
+	Data    map[string]interface{} `json:"data"`
+}
 
 var s storage.Storage
 
@@ -45,7 +53,6 @@ func getIp(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-
 // getAll will get all Ip.
 // Sample usage: http://localhost:18090/get-all
 func getAll(w http.ResponseWriter, r *http.Request) {
@@ -57,7 +64,12 @@ func getAll(w http.ResponseWriter, r *http.Request) {
 
 		result := s.GetAll()
 		if len(result) > 0 {
-			w.Write(result)
+			//please use ',' as sep when is saved
+			list := strings.Split(string(result),"http://")
+			data := map[string]interface{}{
+				"list": list,
+			}
+			JsonSuccess(w, data)
 		} else {
 			w.WriteHeader(http.StatusNotFound)
 		}
@@ -81,4 +93,19 @@ func deleteIp(w http.ResponseWriter, r *http.Request) {
 	} else {
 		w.WriteHeader(http.StatusMethodNotAllowed)
 	}
+}
+
+func JsonSuccess(w http.ResponseWriter, data map[string]interface{}) {
+	res := Response{
+		Code:    0,
+		Message: "success",
+		Data:    data,
+	}
+	JsonReturn(w, res)
+}
+
+func JsonReturn(w http.ResponseWriter, res Response) {
+	w.Header().Set("Content-Type", "application/json")
+	str, _ := json.Marshal(res)
+	w.Write(str)
 }
