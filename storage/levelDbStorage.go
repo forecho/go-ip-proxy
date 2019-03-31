@@ -46,13 +46,13 @@ func (s *LevelDbStorage) Get() string {
 }
 
 // GetAll will return all key-value in DB.
-func (s *LevelDbStorage) GetAll() []byte {
-	var result []byte
+func (s *LevelDbStorage) GetAll() []string {
+	var result []string
 
 	iter := s.Db.NewIterator(nil, nil)
 	for iter.Next() {
-		key := iter.Key()
-		result = append(result, key...)
+		key := string(iter.Key())
+		result = append(result, key)
 	}
 	iter.Release()
 	err := iter.Error()

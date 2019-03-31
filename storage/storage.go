@@ -5,7 +5,7 @@ type Storage interface {
 	Delete(string) bool
 	Create(string, string) error
 	Close()
-	GetAll() []byte
+	GetAll() []string
 	//GetRandomOne() []byte
 }
 

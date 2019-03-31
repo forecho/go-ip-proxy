@@ -1,8 +1,10 @@
 package server
 
 import (
+	"encoding/json"
 	"fmt"
 	"go-ip-proxy/config"
+	"go-ip-proxy/result"
 	"go-ip-proxy/storage"
 	"net/http"
 )
@@ -53,9 +55,14 @@ func getAll(w http.ResponseWriter, r *http.Request) {
 			w.WriteHeader(http.StatusInternalServerError)
 		}
 
-		result := s.GetAll()
-		if len(result) > 0 {
-			w.Write(result)
+		res := s.GetAll()
+		if len(res) > 0 {
+			newResult := result.Result{
+				Data:  res,
+				Count: len(res),
+			}
+			str, _ := json.Marshal(newResult)
+			w.Write(str)
 		} else {
 			w.WriteHeader(http.StatusNotFound)
 		}

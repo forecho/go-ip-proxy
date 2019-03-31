@@ -18,7 +18,7 @@ func VerifyAndDelete(storage storage.Storage) {
 	for _, item := range storage.GetAll() {
 		wg.Add(1)
 
-		go func(ip byte) {
+		go func(ip string) {
 			if !util.VerifyProxyIp(string(ip)) {
 				storage.Delete(string(ip))
 			}
